@@ -6,153 +6,125 @@
   <title>Interactive Guide to ISO 19650-1 for BIM</title>
   <style>
     :root {
-      --bg: #f5f7fb;
-      --panel: #ffffff;
-      --ink: #172033;
-      --muted: #667085;
-      --brand: #174ea6;
-      --brand-2: #0b6bcb;
-      --accent: #e8f1ff;
-      --line: #d9e2ef;
-      --good: #0f766e;
-      --warn: #b45309;
-      --bad: #b91c1c;
-      --shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+      --sky:#7ec8ff;
+      --cloud:#ffffff;
+      --ground:#7b4a22;
+      --grass:#37b24d;
+      --panel:#fff7df;
+      --ink:#2b1b12;
+      --muted:#6b5b4f;
+      --brand:#e52521;
+      --brand-2:#049cd8;
+      --accent:#fbd000;
+      --line:#2b1b12;
+      --good:#2f9e44;
+      --warn:#f76707;
+      --bad:#d00000;
+      --shadow: 8px 8px 0 rgba(43,27,18,.22);
     }
     * { box-sizing: border-box; }
+    html { scroll-behavior:smooth; }
     body {
-      margin: 0;
-      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.55;
+      margin:0;
+      font-family: "Trebuchet MS", Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      line-height:1.55;
+      background:
+        radial-gradient(circle at 12% 80px, #fff 0 22px, transparent 23px),
+        radial-gradient(circle at 16% 80px, #fff 0 30px, transparent 31px),
+        radial-gradient(circle at 20% 80px, #fff 0 22px, transparent 23px),
+        radial-gradient(circle at 76% 150px, #fff 0 20px, transparent 21px),
+        radial-gradient(circle at 80% 150px, #fff 0 28px, transparent 29px),
+        radial-gradient(circle at 84% 150px, #fff 0 20px, transparent 21px),
+        linear-gradient(var(--sky), #b9e8ff 470px, #95d56f 471px, #95d56f 510px, #7b4a22 511px);
+      background-attachment:fixed;
     }
-    header {
-      background: linear-gradient(135deg, #102a56, #0b6bcb);
-      color: white;
-      padding: 42px 24px 34px;
-    }
-    .wrap { max-width: 1180px; margin: 0 auto; }
-    .hero { display: grid; grid-template-columns: 1.5fr .8fr; gap: 28px; align-items: center; }
-    h1 { font-size: clamp(2rem, 4vw, 4rem); line-height: 1.05; margin: 0 0 16px; letter-spacing: -0.04em; }
-    h2 { font-size: 1.55rem; margin: 0 0 14px; }
-    h3 { margin: 0 0 10px; }
-    p { margin: 0 0 12px; }
-    .subtitle { font-size: 1.1rem; opacity: .92; max-width: 820px; }
-    .notice {
-      background: rgba(255,255,255,.12);
-      border: 1px solid rgba(255,255,255,.2);
-      padding: 16px;
-      border-radius: 16px;
-      font-size: .95rem;
-    }
-    nav {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      background: rgba(255,255,255,.95);
-      backdrop-filter: blur(8px);
-      border-bottom: 1px solid var(--line);
-    }
-    .nav-inner { display: flex; gap: 8px; overflow-x: auto; padding: 10px 24px; max-width: 1180px; margin: auto; }
-    .nav-inner a, .btn {
-      border: 1px solid var(--line);
-      background: white;
-      color: var(--ink);
-      text-decoration: none;
-      padding: 9px 13px;
-      border-radius: 999px;
-      white-space: nowrap;
-      font-size: .9rem;
-      cursor: pointer;
-    }
-    .nav-inner a:hover, .btn:hover { border-color: var(--brand-2); color: var(--brand); }
-    main { padding: 28px 24px 60px; }
-    section { margin: 0 auto 24px; max-width: 1180px; }
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: var(--shadow);
-      padding: 24px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
-    .col-4 { grid-column: span 4; }
-    .col-6 { grid-column: span 6; }
-    .col-8 { grid-column: span 8; }
-    .col-12 { grid-column: span 12; }
-    .pill { display: inline-block; background: var(--accent); color: var(--brand); padding: 5px 10px; border-radius: 999px; font-weight: 700; font-size: .78rem; margin-bottom: 10px; }
-    .concept { cursor: pointer; transition: .18s ease; }
-    .concept:hover { transform: translateY(-2px); border-color: #9cc5ff; }
-    .concept .more { display: none; margin-top: 10px; color: var(--muted); }
-    .concept.open .more { display: block; }
-    .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 18px; }
-    .step {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-      background: #fbfdff;
-      min-height: 145px;
-      cursor: pointer;
-    }
-    .step.active { border-color: var(--brand-2); background: var(--accent); }
-    .step strong { display: block; color: var(--brand); margin-bottom: 6px; }
-    .panel-detail { margin-top: 16px; padding: 18px; border-radius: 16px; background: #f8fbff; border: 1px dashed #9cc5ff; }
-    .hierarchy { display: flex; flex-direction: column; gap: 10px; }
-    .level {
-      border-left: 8px solid var(--brand-2);
-      background: #f8fbff;
-      padding: 14px 16px;
-      border-radius: 12px;
-    }
-    .level:nth-child(2) { border-left-color: #2b7a78; }
-    .level:nth-child(3) { border-left-color: #6b7280; }
-    .level:nth-child(4) { border-left-color: #b45309; }
-    .role-table, .check-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 14px; }
-    th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--line); }
-    th { background: #f0f5ff; color: #183b6b; }
-    tr:last-child td { border-bottom: 0; }
-    details { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: white; margin-bottom: 10px; }
-    summary { cursor: pointer; font-weight: 700; }
-    .quiz-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin:14px 0 18px; padding:14px; border:1px solid var(--line); border-radius:18px; background:#f8fbff; }
-    .score-box { font-weight:800; color:var(--brand); }
-    .progress-shell { width: 100%; height: 12px; background:#e5edf8; border-radius:999px; overflow:hidden; margin-top:10px; }
-    .progress-bar { height:100%; width:0%; background:linear-gradient(90deg, #174ea6, #0b6bcb); transition:.25s ease; }
-    .quiz-card { border: 1px solid var(--line); border-radius: 18px; padding: 18px; background: #fff; }
-    .quiz-card.answered { border-color:#b8cff4; }
-    .quiz-meta { color:var(--muted); font-size:.86rem; margin-bottom:8px; }
-    .answers { display: grid; gap: 8px; margin-top: 10px; }
-    .answer { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; background: #fbfdff; text-align:left; font:inherit; color:inherit; }
-    .answer:hover { border-color:var(--brand-2); }
-    .answer.correct { border-color: var(--good); background: #ecfdf5; }
-    .answer.wrong { border-color: var(--bad); background: #fef2f2; }
-    .feedback { margin-top: 10px; font-weight: 700; min-height:1.4em; }
-    .quiz-summary { display:none; margin-top:18px; padding:18px; border-radius:16px; border:1px solid var(--line); background:#fff; }
+    body:before, body:after { content:""; position:fixed; left:0; right:0; pointer-events:none; z-index:1; }
+    body:before { bottom:0; height:34px; background:repeating-linear-gradient(90deg,#7b4a22 0 42px,#5f3518 43px 84px); border-top:5px solid #2f9e44; }
+    body:after { top:150px; height:20px; background:repeating-linear-gradient(90deg, transparent 0 120px, rgba(251,208,0,.55) 121px 136px, transparent 137px 230px); opacity:.9; }
+    header { position:relative; z-index:2; color:white; padding:46px 24px 38px; background:linear-gradient(180deg,#049cd8 0%, #0076bd 100%); border-bottom:7px solid #2b1b12; overflow:hidden; }
+    header:before { content:"🪙  🧱  ⭐  🧱  🪙"; position:absolute; right:30px; top:20px; font-size:2rem; letter-spacing:14px; opacity:.95; animation:floaty 2.5s ease-in-out infinite; }
+    header:after { content:""; position:absolute; left:0; right:0; bottom:0; height:18px; background:repeating-linear-gradient(90deg,#b76b2b 0 36px,#8a4518 37px 72px); }
+    @keyframes floaty { 0%,100%{ transform:translateY(0)} 50%{ transform:translateY(-9px)} }
+    .wrap { max-width:1180px; margin:0 auto; }
+    .hero { display:grid; grid-template-columns:1.5fr .8fr; gap:28px; align-items:center; }
+    h1 { font-size:clamp(2.1rem,4.5vw,4.6rem); line-height:1.02; margin:0 0 16px; letter-spacing:-.04em; text-shadow:4px 4px 0 #2b1b12; }
+    h2 { font-size:1.65rem; margin:0 0 14px; }
+    h2:before { content:"⭐ "; }
+    h3 { margin:0 0 10px; }
+    p { margin:0 0 12px; }
+    .subtitle { font-size:1.13rem; max-width:820px; text-shadow:1px 1px 0 rgba(0,0,0,.35); }
+    .notice { background:#fff7df; color:var(--ink); border:4px solid #2b1b12; padding:16px; border-radius:18px; box-shadow:var(--shadow); }
+    nav { position:sticky; top:0; z-index:30; background:#fbd000; border-bottom:5px solid #2b1b12; }
+    .nav-inner { display:flex; gap:8px; overflow-x:auto; padding:10px 24px; max-width:1180px; margin:auto; }
+    .nav-inner a, .btn { border:3px solid #2b1b12; background:#fff7df; color:var(--ink); text-decoration:none; padding:9px 14px; border-radius:999px; white-space:nowrap; font-size:.92rem; font-weight:800; cursor:pointer; box-shadow:3px 3px 0 rgba(43,27,18,.3); transition:.15s ease; }
+    .nav-inner a:hover, .btn:hover { transform:translateY(-2px); background:#fff; color:#e52521; }
+    main { position:relative; z-index:2; padding:28px 24px 76px; }
+    section { margin:0 auto 24px; max-width:1180px; }
+    .card { background:var(--panel); border:4px solid #2b1b12; border-radius:20px; box-shadow:var(--shadow); padding:24px; }
+    .grid { display:grid; grid-template-columns:repeat(12,1fr); gap:18px; }
+    .col-4 { grid-column:span 4; } .col-6 { grid-column:span 6; } .col-8 { grid-column:span 8; } .col-12 { grid-column:span 12; }
+    .pill { display:inline-block; background:#e52521; color:white; padding:6px 11px; border:3px solid #2b1b12; border-radius:999px; font-weight:900; font-size:.78rem; margin-bottom:10px; box-shadow:2px 2px 0 rgba(0,0,0,.25); }
+    .concept { cursor:pointer; transition:.18s ease; position:relative; }
+    .concept:before { content:"?"; position:absolute; right:14px; top:12px; background:#fbd000; border:3px solid #2b1b12; width:30px; height:30px; display:grid; place-items:center; font-weight:900; }
+    .concept:hover { transform:translateY(-4px); background:#fff3bf; }
+    .concept .more { display:none; margin-top:10px; color:var(--muted); }
+    .concept.open .more { display:block; }
+    .concept.open:before { content:"🪙"; }
+    .timeline { display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-top:18px; }
+    .step { border:3px solid #2b1b12; border-radius:16px; padding:14px; background:#fff7df; min-height:145px; cursor:pointer; box-shadow:4px 4px 0 rgba(43,27,18,.18); }
+    .step:hover { transform:translateY(-2px); }
+    .step.active { background:#fbd000; }
+    .step strong { display:block; color:#e52521; margin-bottom:6px; }
+    .panel-detail { margin-top:16px; padding:18px; border-radius:16px; background:#d3f9d8; border:4px dashed #2f9e44; font-weight:700; }
+    .hierarchy { display:flex; flex-direction:column; gap:10px; }
+    .level { border-left:12px solid #e52521; background:#fff7df; padding:14px 16px; border-radius:12px; border-top:3px solid #2b1b12; border-right:3px solid #2b1b12; border-bottom:3px solid #2b1b12; }
+    .level:nth-child(2){ border-left-color:#fbd000; } .level:nth-child(3){ border-left-color:#049cd8; } .level:nth-child(4){ border-left-color:#2f9e44; }
+    .role-table, .check-table { width:100%; border-collapse:separate; border-spacing:0; overflow:hidden; border-radius:14px; border:3px solid #2b1b12; }
+    th, td { text-align:left; vertical-align:top; padding:12px; border-bottom:2px solid #2b1b12; }
+    th { background:#e52521; color:#fff; }
+    tr:last-child td { border-bottom:0; }
+    details { border:3px solid #2b1b12; border-radius:14px; padding:12px 14px; background:#fff7df; margin-bottom:10px; }
+    summary { cursor:pointer; font-weight:900; }
+    .quiz-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin:14px 0 18px; padding:14px; border:4px solid #2b1b12; border-radius:18px; background:#fbd000; }
+    .score-box { font-weight:900; color:#e52521; font-size:1.1rem; }
+    .progress-shell { width:100%; height:18px; background:#fff7df; border:3px solid #2b1b12; border-radius:999px; overflow:hidden; margin-top:10px; }
+    .progress-bar { height:100%; width:0%; background:repeating-linear-gradient(45deg,#e52521 0 14px,#049cd8 15px 28px); transition:.25s ease; }
+    .quiz-card { border:4px solid #2b1b12; border-radius:18px; padding:18px; background:#fff7df; position:relative; }
+    .quiz-card:before { content:"🧱"; position:absolute; top:-18px; right:18px; font-size:1.7rem; }
+    .quiz-card.answered { background:#fff3bf; }
+    .quiz-meta { color:#6b5b4f; font-size:.86rem; margin-bottom:8px; font-weight:800; }
+    .answers { display:grid; gap:8px; margin-top:10px; }
+    .answer { padding:10px 12px; border:3px solid #2b1b12; border-radius:12px; cursor:pointer; background:white; text-align:left; font:inherit; color:inherit; font-weight:700; box-shadow:3px 3px 0 rgba(43,27,18,.18); }
+    .answer:hover { transform:translateY(-2px); background:#e7f5ff; }
+    .answer.correct { border-color:#2f9e44; background:#d3f9d8; }
+    .answer.wrong { border-color:#d00000; background:#ffe3e3; }
+    .feedback { margin-top:10px; font-weight:900; min-height:1.4em; }
+    .quiz-summary { display:none; margin-top:18px; padding:18px; border-radius:16px; border:4px solid #2b1b12; background:#d3f9d8; font-weight:800; }
     .quiz-summary.show { display:block; }
-    .search-box { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; font-size: 1rem; margin-bottom: 14px; }
-    .glossary-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
-    .glossary-item:last-child { border-bottom: 0; }
-    .tag { color: var(--muted); font-size: .85rem; }
-    .callout { border-left: 6px solid var(--warn); background: #fffbeb; padding: 16px; border-radius: 14px; }
-    footer { color: var(--muted); text-align: center; padding: 30px; }
-    @media (max-width: 900px) {
-      .hero, .grid, .timeline { display: block; }
-      .col-4, .col-6, .col-8, .col-12 { margin-bottom: 16px; }
-      .step { margin-bottom: 10px; }
-    }
-  </style>
+    .search-box { width:100%; padding:13px 14px; border:4px solid #2b1b12; border-radius:14px; font-size:1rem; margin-bottom:14px; background:#fff7df; }
+    .glossary-item { padding:12px 0; border-bottom:2px dashed #2b1b12; }
+    .glossary-item:last-child { border-bottom:0; }
+    .tag { color:#6b5b4f; font-size:.85rem; font-weight:800; }
+    .callout { border-left:12px solid #f76707; background:#fff3bf; padding:16px; border-radius:14px; border-top:3px solid #2b1b12; border-right:3px solid #2b1b12; border-bottom:3px solid #2b1b12; }
+    footer { color:#fff; text-align:center; padding:30px; text-shadow:2px 2px 0 #2b1b12; }
+    .mario-hud { position:fixed; right:16px; bottom:52px; z-index:50; background:#fff7df; border:4px solid #2b1b12; border-radius:18px; padding:10px 14px; box-shadow:var(--shadow); font-weight:900; }
+    .power-note { margin-top:14px; padding:12px 14px; border:4px solid #2b1b12; border-radius:16px; background:#e7f5ff; font-weight:800; }
+    @media (max-width:900px){ .hero,.grid,.timeline{display:block;} .col-4,.col-6,.col-8,.col-12{margin-bottom:16px;} .step{margin-bottom:10px;} header:before{display:none;} .mario-hud{left:12px;right:12px;text-align:center;} }
+</style>
 </head>
 <body>
+<div class="mario-hud" id="marioHud">🪙 Coins: <span id="coinCount">0</span> / 10</div>
 <header>
   <div class="wrap hero">
     <div>
       <div class="pill" style="background:rgba(255,255,255,.16); color:white;">BIM / Information Management</div>
-      <h1>ISO 19650-1 Interactive Learning Guide</h1>
-      <p class="subtitle">Understand the principles behind information management using BIM: why information is specified, produced, checked, exchanged, accepted, and used across the asset life cycle.</p>
+      <h1>ISO 19650-1 Mario-Style Learning Adventure</h1>
+      <p class="subtitle">Jump through ISO 19650-1 concepts like levels in a BIM game: collect requirements, avoid information chaos, and beat the quiz boss.</p>
     </div>
     <div class="notice">
-      <strong>Copyright-safe note:</strong><br />
-      This page explains concepts in original wording. It is not a replacement for the official ISO 19650-1 standard and does not reproduce the standard text.
+      <strong>Study mode:</strong><br />
+      Mario-inspired visual theme added for fun. ISO content is explained in original wording and is not a replacement for the official ISO 19650-1 standard.
     </div>
   </div>
 </header>
@@ -385,6 +357,7 @@
   </div>
 
   <div class="quiz-summary" id="quizSummary"></div>
+  <div class="power-note">🎮 Study challenge: score 9 or more to clear the castle. Then apply the logic to a real BEP, MIDP, TIDP, CDE, or project information requirement workflow.</div>
 </section>
 
 <section id="glossary" class="card">
@@ -434,6 +407,7 @@
   const progressEl = document.getElementById('quizProgress');
   const summaryEl = document.getElementById('quizSummary');
   const resetBtn = document.getElementById('resetQuiz');
+  const coinEl = document.getElementById('coinCount');
 
   function updateQuizScore() {
     let answered = 0;
@@ -445,13 +419,14 @@
       }
     });
     scoreEl.textContent = `Score: ${score} / ${quizCards.length}`;
+    if (coinEl) coinEl.textContent = score;
     statusEl.textContent = `Answered: ${answered} of ${quizCards.length}`;
     progressEl.style.width = `${(answered / quizCards.length) * 100}%`;
 
     if (answered === quizCards.length) {
       let message = 'Good start. Review the highlighted corrections and retry.';
-      if (score >= 9) message = 'Excellent. You understand the key ISO 19650-1 principles.';
-      else if (score >= 7) message = 'Solid result. Review the missed concepts before applying them to a BEP or CDE workflow.';
+      if (score >= 9) message = '🏰 Castle cleared. Excellent understanding of key ISO 19650-1 principles.';
+      else if (score >= 7) message = '⭐ Solid run. Review the missed concepts before applying them to a BEP or CDE workflow.';
       summaryEl.classList.add('show');
       summaryEl.innerHTML = `<strong>Final result: ${score}/${quizCards.length}</strong><br>${message}`;
     } else {
@@ -472,13 +447,13 @@
         if (index === correct) {
           answer.classList.add('correct');
           card.dataset.correctAnswered = 'true';
-          feedback.textContent = 'Correct.';
+          feedback.textContent = '🪙 Correct. Coin collected.';
           feedback.style.color = 'var(--good)';
         } else {
           answer.classList.add('wrong');
           answers[correct].classList.add('correct');
           card.dataset.correctAnswered = 'false';
-          feedback.textContent = 'Not quite. The highlighted answer is the better ISO 19650-1 interpretation.';
+          feedback.textContent = '🍄 Not quite. The highlighted answer is the better ISO 19650-1 interpretation.';
           feedback.style.color = 'var(--bad)';
         }
         updateQuizScore();
