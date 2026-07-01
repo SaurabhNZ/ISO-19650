@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Guide to ISO 19650-1 for BIM</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --ink: #172033;
+      --muted: #667085;
+      --brand: #174ea6;
+      --brand-2: #0b6bcb;
+      --accent: #e8f1ff;
+      --line: #d9e2ef;
+      --good: #0f766e;
+      --warn: #b45309;
+      --bad: #b91c1c;
+      --shadow: 0 12px 30px rgba(17, 24, 39, 0.08);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+    header {
+      background: linear-gradient(135deg, #102a56, #0b6bcb);
+      color: white;
+      padding: 42px 24px 34px;
+    }
+    .wrap { max-width: 1180px; margin: 0 auto; }
+    .hero { display: grid; grid-template-columns: 1.5fr .8fr; gap: 28px; align-items: center; }
+    h1 { font-size: clamp(2rem, 4vw, 4rem); line-height: 1.05; margin: 0 0 16px; letter-spacing: -0.04em; }
+    h2 { font-size: 1.55rem; margin: 0 0 14px; }
+    h3 { margin: 0 0 10px; }
+    p { margin: 0 0 12px; }
+    .subtitle { font-size: 1.1rem; opacity: .92; max-width: 820px; }
+    .notice {
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      padding: 16px;
+      border-radius: 16px;
+      font-size: .95rem;
+    }
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255,255,255,.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner { display: flex; gap: 8px; overflow-x: auto; padding: 10px 24px; max-width: 1180px; margin: auto; }
+    .nav-inner a, .btn {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      text-decoration: none;
+      padding: 9px 13px;
+      border-radius: 999px;
+      white-space: nowrap;
+      font-size: .9rem;
+      cursor: pointer;
+    }
+    .nav-inner a:hover, .btn:hover { border-color: var(--brand-2); color: var(--brand); }
+    main { padding: 28px 24px 60px; }
+    section { margin: 0 auto 24px; max-width: 1180px; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 18px; }
+    .col-4 { grid-column: span 4; }
+    .col-6 { grid-column: span 6; }
+    .col-8 { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    .pill { display: inline-block; background: var(--accent); color: var(--brand); padding: 5px 10px; border-radius: 999px; font-weight: 700; font-size: .78rem; margin-bottom: 10px; }
+    .concept { cursor: pointer; transition: .18s ease; }
+    .concept:hover { transform: translateY(-2px); border-color: #9cc5ff; }
+    .concept .more { display: none; margin-top: 10px; color: var(--muted); }
+    .concept.open .more { display: block; }
+    .timeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 18px; }
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fbfdff;
+      min-height: 145px;
+      cursor: pointer;
+    }
+    .step.active { border-color: var(--brand-2); background: var(--accent); }
+    .step strong { display: block; color: var(--brand); margin-bottom: 6px; }
+    .panel-detail { margin-top: 16px; padding: 18px; border-radius: 16px; background: #f8fbff; border: 1px dashed #9cc5ff; }
+    .hierarchy { display: flex; flex-direction: column; gap: 10px; }
+    .level {
+      border-left: 8px solid var(--brand-2);
+      background: #f8fbff;
+      padding: 14px 16px;
+      border-radius: 12px;
+    }
+    .level:nth-child(2) { border-left-color: #2b7a78; }
+    .level:nth-child(3) { border-left-color: #6b7280; }
+    .level:nth-child(4) { border-left-color: #b45309; }
+    .role-table, .check-table { width: 100%; border-collapse: collapse; overflow: hidden; border-radius: 14px; }
+    th, td { text-align: left; vertical-align: top; padding: 12px; border-bottom: 1px solid var(--line); }
+    th { background: #f0f5ff; color: #183b6b; }
+    tr:last-child td { border-bottom: 0; }
+    details { border: 1px solid var(--line); border-radius: 14px; padding: 12px 14px; background: white; margin-bottom: 10px; }
+    summary { cursor: pointer; font-weight: 700; }
+    .quiz-toolbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:12px; margin:14px 0 18px; padding:14px; border:1px solid var(--line); border-radius:18px; background:#f8fbff; }
+    .score-box { font-weight:800; color:var(--brand); }
+    .progress-shell { width: 100%; height: 12px; background:#e5edf8; border-radius:999px; overflow:hidden; margin-top:10px; }
+    .progress-bar { height:100%; width:0%; background:linear-gradient(90deg, #174ea6, #0b6bcb); transition:.25s ease; }
+    .quiz-card { border: 1px solid var(--line); border-radius: 18px; padding: 18px; background: #fff; }
+    .quiz-card.answered { border-color:#b8cff4; }
+    .quiz-meta { color:var(--muted); font-size:.86rem; margin-bottom:8px; }
+    .answers { display: grid; gap: 8px; margin-top: 10px; }
+    .answer { padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; background: #fbfdff; text-align:left; font:inherit; color:inherit; }
+    .answer:hover { border-color:var(--brand-2); }
+    .answer.correct { border-color: var(--good); background: #ecfdf5; }
+    .answer.wrong { border-color: var(--bad); background: #fef2f2; }
+    .feedback { margin-top: 10px; font-weight: 700; min-height:1.4em; }
+    .quiz-summary { display:none; margin-top:18px; padding:18px; border-radius:16px; border:1px solid var(--line); background:#fff; }
+    .quiz-summary.show { display:block; }
+    .search-box { width: 100%; padding: 13px 14px; border: 1px solid var(--line); border-radius: 14px; font-size: 1rem; margin-bottom: 14px; }
+    .glossary-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .glossary-item:last-child { border-bottom: 0; }
+    .tag { color: var(--muted); font-size: .85rem; }
+    .callout { border-left: 6px solid var(--warn); background: #fffbeb; padding: 16px; border-radius: 14px; }
+    footer { color: var(--muted); text-align: center; padding: 30px; }
+    @media (max-width: 900px) {
+      .hero, .grid, .timeline { display: block; }
+      .col-4, .col-6, .col-8, .col-12 { margin-bottom: 16px; }
+      .step { margin-bottom: 10px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="wrap hero">
+    <div>
+      <div class="pill" style="background:rgba(255,255,255,.16); color:white;">BIM / Information Management</div>
+      <h1>ISO 19650-1 Interactive Learning Guide</h1>
+      <p class="subtitle">Understand the principles behind information management using BIM: why information is specified, produced, checked, exchanged, accepted, and used across the asset life cycle.</p>
+    </div>
+    <div class="notice">
+      <strong>Copyright-safe note:</strong><br />
+      This page explains concepts in original wording. It is not a replacement for the official ISO 19650-1 standard and does not reproduce the standard text.
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#overview">Overview</a>
+    <a href="#concepts">Core concepts</a>
+    <a href="#lifecycle">Lifecycle</a>
+    <a href="#requirements">Requirements</a>
+    <a href="#roles">Roles</a>
+    <a href="#cde">CDE</a>
+    <a href="#checklist">Project checklist</a>
+    <a href="#quiz">Quiz</a>
+    <a href="#glossary">Glossary</a>
+  </div>
+</nav>
+
+<main>
+<section id="overview" class="card">
+  <h2>1. What ISO 19650-1 is really about</h2>
+  <p>ISO 19650-1 is the concept and principle part of the ISO 19650 series. In simple BIM language, it explains how project and asset information should be managed so the right people receive the right information, at the right level of detail, at the right time.</p>
+  <div class="grid" style="margin-top:16px;">
+    <div class="card col-4" style="box-shadow:none;"><span class="pill">Purpose</span><h3>Control information</h3><p>Avoid uncontrolled model/file production. Information should respond to defined needs.</p></div>
+    <div class="card col-4" style="box-shadow:none;"><span class="pill">Method</span><h3>Use agreed processes</h3><p>Define responsibilities, delivery milestones, review states, approvals, and exchange rules.</p></div>
+    <div class="card col-4" style="box-shadow:none;"><span class="pill">Outcome</span><h3>Support decisions</h3><p>Information has value only when it supports design, construction, operation, maintenance, or asset decisions.</p></div>
+  </div>
+</section>
+
+<section id="concepts">
+  <div class="grid">
+    <div class="col-12"><h2>2. Core concepts — click each card</h2></div>
+    <div class="card concept col-4"><span class="pill">Information</span><h3>Information is an asset</h3><p>Models, drawings, schedules, documents, COBie/data, and records should be treated as managed project deliverables.</p><div class="more">Practical BIM example: a door family is not enough. The door number, fire rating, hardware set, acoustic rating, and approved status may be the information needed for a specific decision.</div></div>
+    <div class="card concept col-4"><span class="pill">Need</span><h3>Start with requirements</h3><p>Information production should begin from the appointing party’s needs, not from what the modeler feels like creating.</p><div class="more">Example: the client needs FM handover data. That should influence naming, classification, parameters, model breakdown, and deliverable milestones from the start.</div></div>
+    <div class="card concept col-4"><span class="pill">Quality</span><h3>Check before sharing</h3><p>Information should pass agreed checks before it is shared, published, or used for downstream decisions.</p><div class="more">Example: clash-free does not mean information-ready. Naming, status, coordinates, classification, suitability, revision, and required attributes also need review.</div></div>
+    <div class="card concept col-4"><span class="pill">Collaboration</span><h3>Work in controlled states</h3><p>Information moves through controlled containers and states such as work-in-progress, shared, published, and archived.</p><div class="more">This reduces the risk that someone builds, prices, or coordinates against the wrong model or drawing issue.</div></div>
+    <div class="card concept col-4"><span class="pill">Risk</span><h3>Reduce ambiguity</h3><p>The process reduces disputes caused by unclear responsibility, unreliable information, missing approvals, or inconsistent file naming.</p><div class="more">The main BIM management value is not just 3D modelling; it is traceable, reliable information exchange.</div></div>
+    <div class="card concept col-4"><span class="pill">Lifecycle</span><h3>Think beyond design</h3><p>Information management applies from strategic need through design, construction, handover, operation, and eventual renewal or disposal.</p><div class="more">A model that is useful during design can become poor asset information if data requirements are ignored until the end.</div></div>
+  </div>
+</section>
+
+<section id="lifecycle" class="card">
+  <h2>3. Asset information lifecycle</h2>
+  <p>Click a lifecycle stage to see the information management focus.</p>
+  <div class="timeline">
+    <div class="step active" data-detail="Define business need, asset objectives, required decisions, information purpose, and high-level asset information requirements."><strong>1. Need</strong>Why is the asset required?</div>
+    <div class="step" data-detail="Set project information requirements, scope, responsibility matrix, exchange milestones, naming rules, and CDE workflow."><strong>2. Brief</strong>What information is required?</div>
+    <div class="step" data-detail="Develop models and documents according to agreed responsibility, suitability, level of information need, and coordination rules."><strong>3. Design</strong>How is information produced?</div>
+    <div class="step" data-detail="Use verified information for procurement, sequencing, coordination, installation, quality control, and site decisions."><strong>4. Construction</strong>How is information used on site?</div>
+    <div class="step" data-detail="Validate as-built/as-installed information, asset data, O&M information, warranties, commissioning records, and handover deliverables."><strong>5. Handover</strong>Can the owner operate the asset?</div>
+    <div class="step" data-detail="Maintain asset information during operation, maintenance, refurbishment, and disposal so records stay reliable."><strong>6. Operation</strong>Is information kept current?</div>
+  </div>
+  <div id="lifeDetail" class="panel-detail">Define business need, asset objectives, required decisions, information purpose, and high-level asset information requirements.</div>
+</section>
+
+<section id="requirements" class="card">
+  <h2>4. Information requirements hierarchy</h2>
+  <p>This is one of the most important ideas. Requirements flow down from the owner/client need into project and task-level deliverables.</p>
+  <div class="hierarchy">
+    <div class="level"><h3>OIR — Organizational Information Requirements</h3><p>Information the organization needs to meet business objectives. Example: portfolio-level cost, compliance, carbon, maintenance, or space data.</p></div>
+    <div class="level"><h3>AIR — Asset Information Requirements</h3><p>Information needed to operate and maintain a specific asset. Example: maintainable equipment data, room data, warranty data, asset tags.</p></div>
+    <div class="level"><h3>PIR — Project Information Requirements</h3><p>Information needed to deliver a specific project. Example: design review deliverables, coordination models, cost plan data, consent documentation.</p></div>
+    <div class="level"><h3>EIR — Exchange Information Requirements</h3><p>What information must be exchanged, when, by whom, in what format, and for what purpose.</p></div>
+  </div>
+  <div class="callout" style="margin-top:16px;"><strong>BIM manager test:</strong> If a model parameter does not support a requirement, decision, deliverable, or asset use case, question why it is being created.</div>
+</section>
+
+<section id="roles" class="card">
+  <h2>5. Roles and responsibilities</h2>
+  <table class="role-table">
+    <thead><tr><th>Role term</th><th>Plain BIM meaning</th><th>Typical responsibility</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Appointing party</strong></td><td>Usually the client, owner, developer, or asset owner.</td><td>Defines information needs, acceptance criteria, exchange requirements, and project outcomes.</td></tr>
+      <tr><td><strong>Lead appointed party</strong></td><td>Main consultant, contractor, or delivery lead appointed to manage information delivery.</td><td>Plans, coordinates, and manages the information delivery process across task teams.</td></tr>
+      <tr><td><strong>Appointed party</strong></td><td>Consultant, subcontractor, designer, supplier, or specialist.</td><td>Produces specific information deliverables according to the agreed scope and standards.</td></tr>
+      <tr><td><strong>Task team</strong></td><td>Discipline or package team such as architecture, structure, MEP, façade, interiors, or civil.</td><td>Creates, checks, and submits information containers for their assigned work.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="cde" class="card">
+  <h2>6. Common Data Environment logic</h2>
+  <p>The CDE is not just a folder system. It is a controlled workflow for information containers.</p>
+  <div class="grid" style="margin-top:16px;">
+    <div class="col-6"><details open><summary>Work in Progress</summary><p>Internal team development. Not suitable for wider reliance.</p></details><details><summary>Shared</summary><p>Checked enough for coordination or review by other parties, with clear suitability status.</p></details></div>
+    <div class="col-6"><details><summary>Published</summary><p>Authorized information for contractual, construction, procurement, or formal use.</p></details><details><summary>Archived</summary><p>Record of previous issues, decisions, revisions, and superseded information.</p></details></div>
+  </div>
+</section>
+
+<section id="checklist" class="card">
+  <h2>7. BIM project checklist based on ISO 19650-1 principles</h2>
+  <table class="check-table">
+    <thead><tr><th>Check</th><th>Question to ask</th><th>Status</th></tr></thead>
+    <tbody>
+      <tr><td>Information purpose</td><td>Do we know why each deliverable is required?</td><td>☐</td></tr>
+      <tr><td>Responsibility</td><td>Is every information container assigned to a responsible party?</td><td>☐</td></tr>
+      <tr><td>Level of information need</td><td>Is geometry and data detail appropriate for the decision stage?</td><td>☐</td></tr>
+      <tr><td>Exchange milestones</td><td>Are delivery dates and formats clear?</td><td>☐</td></tr>
+      <tr><td>Naming convention</td><td>Are file/model/document names structured and consistent?</td><td>☐</td></tr>
+      <tr><td>CDE workflow</td><td>Are WIP, shared, published, and archived states controlled?</td><td>☐</td></tr>
+      <tr><td>Review process</td><td>Are checks, approvals, suitability, and revisions recorded?</td><td>☐</td></tr>
+      <tr><td>Handover data</td><td>Are asset data requirements defined before the end of the project?</td><td>☐</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section id="quiz" class="card">
+  <h2>8. Interactive ISO 19650-1 quiz</h2>
+  <p>Test your understanding of ISO 19650-1 concepts in practical BIM language. Click one answer per question. Your score updates automatically.</p>
+
+  <div class="quiz-toolbar">
+    <div>
+      <div class="score-box" id="quizScore">Score: 0 / 10</div>
+      <div class="tag" id="quizStatus">Answered: 0 of 10</div>
+      <div class="progress-shell"><div class="progress-bar" id="quizProgress"></div></div>
+    </div>
+    <button class="btn" id="resetQuiz" type="button">Reset quiz</button>
+  </div>
+
+  <div class="grid">
+    <div class="quiz-card col-6" data-correct="1">
+      <div class="quiz-meta">Question 1 • Information requirements</div>
+      <h3>What should drive BIM information production?</h3>
+      <div class="answers">
+        <button class="answer" type="button">Whatever the model author prefers</button>
+        <button class="answer" type="button">Defined information requirements linked to project or asset needs</button>
+        <button class="answer" type="button">Only the default Revit template settings</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="2">
+      <div class="quiz-meta">Question 2 • CDE</div>
+      <h3>What is the Common Data Environment mainly for?</h3>
+      <div class="answers">
+        <button class="answer" type="button">Making folder icons look organized</button>
+        <button class="answer" type="button">Storing only Revit models</button>
+        <button class="answer" type="button">Managing controlled information workflows and states</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="0">
+      <div class="quiz-meta">Question 3 • Handover</div>
+      <h3>When should handover information be considered?</h3>
+      <div class="answers">
+        <button class="answer" type="button">From the start of the project</button>
+        <button class="answer" type="button">Only one week before completion</button>
+        <button class="answer" type="button">Only after practical completion</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="1">
+      <div class="quiz-meta">Question 4 • Information value</div>
+      <h3>In ISO 19650 thinking, information has value when it:</h3>
+      <div class="answers">
+        <button class="answer" type="button">Makes the model file larger</button>
+        <button class="answer" type="button">Supports a decision, process, delivery milestone, or asset use</button>
+        <button class="answer" type="button">Uses as many parameters as possible</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="2">
+      <div class="quiz-meta">Question 5 • Information states</div>
+      <h3>Which status is normally safest for internal, unfinished team work?</h3>
+      <div class="answers">
+        <button class="answer" type="button">Published</button>
+        <button class="answer" type="button">Archived</button>
+        <button class="answer" type="button">Work in Progress</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="0">
+      <div class="quiz-meta">Question 6 • Responsibility</div>
+      <h3>What should be clear before teams exchange information?</h3>
+      <div class="answers">
+        <button class="answer" type="button">Who is responsible, what is being delivered, when, and for what purpose</button>
+        <button class="answer" type="button">Only the software version</button>
+        <button class="answer" type="button">Only the sheet size</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="1">
+      <div class="quiz-meta">Question 7 • Level of information need</div>
+      <h3>Level of information need means:</h3>
+      <div class="answers">
+        <button class="answer" type="button">Always model everything in maximum detail</button>
+        <button class="answer" type="button">Provide the right amount of geometry, data, and documentation for the purpose</button>
+        <button class="answer" type="button">Use only 2D drawings</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="2">
+      <div class="quiz-meta">Question 8 • Appointing party</div>
+      <h3>The appointing party is usually the party that:</h3>
+      <div class="answers">
+        <button class="answer" type="button">Only models the architecture package</button>
+        <button class="answer" type="button">Issues every subcontractor shop drawing</button>
+        <button class="answer" type="button">Requires information and appoints others to produce it</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="0">
+      <div class="quiz-meta">Question 9 • Quality control</div>
+      <h3>Before information is shared or published, it should be:</h3>
+      <div class="answers">
+        <button class="answer" type="button">Checked against agreed requirements and suitability</button>
+        <button class="answer" type="button">Renamed randomly to avoid duplicates</button>
+        <button class="answer" type="button">Sent without review to save time</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="quiz-card col-6" data-correct="1">
+      <div class="quiz-meta">Question 10 • Practical BIM use</div>
+      <h3>For a Revit/BIM team, a strong ISO 19650-1 habit is:</h3>
+      <div class="answers">
+        <button class="answer" type="button">Adding every possible family parameter</button>
+        <button class="answer" type="button">Keeping information intentional, traceable, checked, and useful</button>
+        <button class="answer" type="button">Avoiding all naming rules</button>
+      </div>
+      <div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="quiz-summary" id="quizSummary"></div>
+</section>
+
+<section id="glossary" class="card">
+  <h2>9. Glossary search</h2>
+  <input id="glossarySearch" class="search-box" placeholder="Search terms: CDE, EIR, OIR, AIR, PIR, information container..." />
+  <div id="glossaryList">
+    <div class="glossary-item"><strong>Information container</strong><div class="tag">A named set of information such as a model, drawing, document, schedule, or dataset.</div></div>
+    <div class="glossary-item"><strong>Level of information need</strong><div class="tag">The right amount of geometry, data, and documentation required for a specific purpose.</div></div>
+    <div class="glossary-item"><strong>CDE</strong><div class="tag">Common Data Environment: the agreed environment and workflow for managing information.</div></div>
+    <div class="glossary-item"><strong>Suitability status</strong><div class="tag">A status that communicates what the information can be used for.</div></div>
+    <div class="glossary-item"><strong>Revision</strong><div class="tag">A controlled change record for an information container.</div></div>
+    <div class="glossary-item"><strong>Information exchange</strong><div class="tag">Formal transfer of defined information at a defined milestone.</div></div>
+    <div class="glossary-item"><strong>Appointing party</strong><div class="tag">The party requiring information and appointing others to produce it.</div></div>
+    <div class="glossary-item"><strong>Lead appointed party</strong><div class="tag">The party responsible for coordinating information delivery from appointed parties.</div></div>
+  </div>
+</section>
+
+<section class="card">
+  <h2>10. Practical takeaway for Revit / BIM teams</h2>
+  <p>ISO 19650-1 is less about creating complex BIM documents and more about disciplined information management. For a Revit team, that means clear model purposes, clean naming, defined parameters, controlled exchanges, model status clarity, and reliable handover data.</p>
+  <p><strong>Simple rule:</strong> model information should be intentional, traceable, checked, and useful.</p>
+</section>
+</main>
+
+<footer>
+  Built as an interactive educational guide. Refer to the official ISO publication for formal requirements.
+</footer>
+
+<script>
+  document.querySelectorAll('.concept').forEach(card => {
+    card.addEventListener('click', () => card.classList.toggle('open'));
+  });
+
+  const steps = document.querySelectorAll('.step');
+  const detail = document.getElementById('lifeDetail');
+  steps.forEach(step => {
+    step.addEventListener('click', () => {
+      steps.forEach(s => s.classList.remove('active'));
+      step.classList.add('active');
+      detail.textContent = step.dataset.detail;
+    });
+  });
+
+  const quizCards = document.querySelectorAll('.quiz-card');
+  const scoreEl = document.getElementById('quizScore');
+  const statusEl = document.getElementById('quizStatus');
+  const progressEl = document.getElementById('quizProgress');
+  const summaryEl = document.getElementById('quizSummary');
+  const resetBtn = document.getElementById('resetQuiz');
+
+  function updateQuizScore() {
+    let answered = 0;
+    let score = 0;
+    quizCards.forEach(card => {
+      if (card.dataset.answered === 'true') {
+        answered += 1;
+        if (card.dataset.correctAnswered === 'true') score += 1;
+      }
+    });
+    scoreEl.textContent = `Score: ${score} / ${quizCards.length}`;
+    statusEl.textContent = `Answered: ${answered} of ${quizCards.length}`;
+    progressEl.style.width = `${(answered / quizCards.length) * 100}%`;
+
+    if (answered === quizCards.length) {
+      let message = 'Good start. Review the highlighted corrections and retry.';
+      if (score >= 9) message = 'Excellent. You understand the key ISO 19650-1 principles.';
+      else if (score >= 7) message = 'Solid result. Review the missed concepts before applying them to a BEP or CDE workflow.';
+      summaryEl.classList.add('show');
+      summaryEl.innerHTML = `<strong>Final result: ${score}/${quizCards.length}</strong><br>${message}`;
+    } else {
+      summaryEl.classList.remove('show');
+      summaryEl.innerHTML = '';
+    }
+  }
+
+  quizCards.forEach(card => {
+    const correct = Number(card.dataset.correct);
+    const answers = card.querySelectorAll('.answer');
+    const feedback = card.querySelector('.feedback');
+    answers.forEach((answer, index) => {
+      answer.addEventListener('click', () => {
+        answers.forEach(a => a.classList.remove('correct', 'wrong'));
+        card.dataset.answered = 'true';
+        card.classList.add('answered');
+        if (index === correct) {
+          answer.classList.add('correct');
+          card.dataset.correctAnswered = 'true';
+          feedback.textContent = 'Correct.';
+          feedback.style.color = 'var(--good)';
+        } else {
+          answer.classList.add('wrong');
+          answers[correct].classList.add('correct');
+          card.dataset.correctAnswered = 'false';
+          feedback.textContent = 'Not quite. The highlighted answer is the better ISO 19650-1 interpretation.';
+          feedback.style.color = 'var(--bad)';
+        }
+        updateQuizScore();
+      });
+    });
+  });
+
+  resetBtn.addEventListener('click', () => {
+    quizCards.forEach(card => {
+      card.dataset.answered = 'false';
+      card.dataset.correctAnswered = 'false';
+      card.classList.remove('answered');
+      card.querySelectorAll('.answer').forEach(a => a.classList.remove('correct', 'wrong'));
+      const feedback = card.querySelector('.feedback');
+      feedback.textContent = '';
+      feedback.removeAttribute('style');
+    });
+    updateQuizScore();
+  });
+
+  updateQuizScore();
+
+  const search = document.getElementById('glossarySearch');
+  const items = document.querySelectorAll('.glossary-item');
+  search.addEventListener('input', () => {
+    const q = search.value.toLowerCase();
+    items.forEach(item => {
+      item.style.display = item.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+    });
+  });
+</script>
+</body>
+</html>
